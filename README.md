@@ -8,6 +8,7 @@ Cinemas (the badge appears next to the title):
 |---|---|
 | Event Cinemas (eventcinemas.com.au) | Cinema session lists, Now Showing / Coming Soon poster grids |
 | HOYTS (hoyts.com.au) | Movies list |
+| Reading Cinemas (readingcinemas.com.au, readingcinemas.co.nz) | Now Showing / Coming Soon, after selecting a cinema |
 | Village Cinemas (villagecinemas.com.au) | Movies list |
 
 Streaming platforms (the badge is pinned to the top-left of each poster):

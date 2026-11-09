@@ -122,6 +122,20 @@ const MR_SITES = [
     title: 'a.movies-list__link'
   },
   {
+    // Session list (Now Showing / Coming Soon) for the selected cinema: one
+    // .list-content row per film with a small poster. Same app on the NZ site.
+    name: 'Reading Cinemas',
+    host: /(^|\.)readingcinemas\.(com\.au|co\.nz)$/,
+    title: '.list-content .list_poster',
+    overlay: true,
+    getTitle: (el) => {
+      const media = el.closest('.media');
+      const heading = media && media.querySelector('.title');
+      const img = el.querySelector('img');
+      return (heading && heading.textContent) || (img && img.alt) || '';
+    }
+  },
+  {
     name: 'Village Cinemas',
     host: /(^|\.)villagecinemas\.com\.au$/,
     title: '.movie-card__title'
