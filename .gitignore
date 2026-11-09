@@ -1,0 +1,5 @@
+# Build output (recreate with: node scripts/build-store.mjs)
+dist/
+
+# macOS
+.DS_Store

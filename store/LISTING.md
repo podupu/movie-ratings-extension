@@ -33,8 +33,8 @@ See the IMDb rating of every film before you book a session or press play.
 Movie Ratings adds a small IMDb badge next to each movie title on cinema websites, and on the posters of films and TV series on streaming services.
 
 ★ WHERE IT WORKS
-• Cinema session listings: Event Cinemas, HOYTS and Village Cinemas
-• Streaming services: Netflix, Prime Video, Disney+ and around 20 more popular services in Australia, the US and India
+• Cinema websites: next to each film in session and movie listings
+• Streaming websites: on the poster of each film and TV series
 
 ★ BADGES THAT TELL YOU AT A GLANCE
 • Green outline – meets your "worth watching" thresholds (default: rating 7.0+ and 10,000+ votes)
@@ -115,7 +115,7 @@ Click **Submit for review**. Because the extension runs on many websites, expect
 ## Notes / known review risks
 
 - **Smoke-test the exact store build first.** In `chrome://extensions`, remove (or turn off) your development copy, click **Load unpacked**, and pick `dist/store/`. Check there are no errors on the extension card. Then add your key and confirm badges appear on HOYTS or Event Cinemas and on one streaming site. Re-enable your development copy afterwards.
-- **Keyword spam.** The description deliberately names only a few services. The store rejects listings that pile up brand or site names. Don't paste the full list of 21 services back in.
+- **Keyword spam (rejected once: "Yellow Argon").** Don't name cinema chains or streaming services anywhere in the store metadata. That covers the manifest description, the store description, screenshot captions and the promo tile. Describe them generically ("cinema and streaming websites"). The supported domains already show to users as the extension's site access. `scripts/build-store.mjs` fails the build if a supported site's name shows up in the manifest description, the settings page or the description block above.
 - **Trademarks.** The badge says "IMDb" and uses a yellow similar to IMDb's. Naming the services to describe compatibility is normally accepted. If a reviewer objects, rename the badge text to "★ 8.1" and change the colour in `src/badge.css`.
 - **Data source.** Ratings come from OMDb, which sources them from IMDb. Every user has their own personal OMDb key, and the listing is free and non-commercial. If you ever charge for it or add ads, you'll need licensed data (OMDb paid tier / IMDb licence).
 - **IMDb fallback.** It is not in the store build: `scripts/build-store.mjs` turns it off and removes the IMDb host permissions. Store users won't see ratings for titles OMDb doesn't have yet (e.g. *Devils' Crest*, a new *Verity*). Your unpacked development copy still has the fallback.

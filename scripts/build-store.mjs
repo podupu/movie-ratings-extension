@@ -66,11 +66,38 @@ for (const f of manifest.content_scripts[0].js.concat(manifest.background.servic
   execFileSync(process.execPath, ['--check', join(out, f)]);
 }
 
+// 3b. Keyword spam: the store rejected v1.0.0 ("Yellow Argon") for listing
+//     service names in the description. No supported site's name may appear in
+//     store-facing text: manifest name/description, the settings page (shown in
+//     screenshots), the listing description, and the screenshot/promo captions.
+const siteNames = [...new Set([...readFileSync(join(root, 'src', 'sites.js'), 'utf8')
+  .matchAll(/(?:name:\s*|ott\()'([^']+)'/g)]
+  .flatMap((m) => m[1].split(/[()]/))
+  .map((n) => n.trim())
+  .filter(Boolean))];
+const listing = readFileSync(join(root, 'store', 'LISTING.md'), 'utf8');
+const description = (listing.match(/\*\*Description:\*\*\s*```\n([\s\S]*?)```/) || [])[1];
+if (!description) fail('could not find the Description block in store/LISTING.md');
+const captions = ['streaming.html', 'cinema.html', 'settings.html', 'promo.html']
+  .map((f) => [`store/mock/${f}`, readFileSync(join(root, 'store', 'mock', f), 'utf8').replace(/<script[\s\S]*?<\/script>/g, '')]);
+const storeText = [
+  ['manifest name', manifest.name],
+  ['manifest description', manifest.description],
+  ['options/options.html', readFileSync(join(out, 'options', 'options.html'), 'utf8')],
+  ['store/LISTING.md description', description],
+  ...captions
+];
+for (const [where, text] of storeText) {
+  const found = siteNames.filter((n) => new RegExp(`(^|[^A-Za-z])${n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^A-Za-z]|$)`).test(text));
+  if (found.length) fail(`${where} names supported services (${found.join(', ')}). The store rejects this as keyword spam.`);
+}
+
 // 4. Zip (files at the zip root, as the store expects).
 const zip = join(root, 'dist', `movie-ratings-${manifest.version}.zip`);
 rmSync(zip, { force: true });
 execFileSync('zip', ['-rqX', zip, '.', '-x', '*.DS_Store'], { cwd: out });
 
 console.log(`✓ ${manifest.name} v${manifest.version}`);
+console.log(`✓ No service names in store-facing text (${siteNames.length} names checked)`);
 console.log(`✓ IMDb fallback code removed; host_permissions: ${manifest.host_permissions.join(', ')}`);
 console.log(`✓ ${zip}`);

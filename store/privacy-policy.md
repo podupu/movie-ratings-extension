@@ -6,7 +6,7 @@ Movie Ratings for Cinemas & Streaming ("the extension") shows IMDb ratings next 
 
 ## What the extension reads
 
-On the supported websites listed in the Chrome Web Store description (for example eventcinemas.com.au, netflix.com, primevideo.com), the extension reads the **titles of the films and TV series shown on the page**, and only those titles. It does not read your account details, viewing history, messages, payment details, or any other page content. It does nothing on other websites.
+On the cinema and streaming websites it supports (listed as the extension's site access in `chrome://extensions`), the extension reads the **titles of the films and TV series shown on the page**, and only those titles. It does not read your account details, viewing history, messages, payment details, or any other page content. It does nothing on other websites.
 
 ## What is sent, and to whom
 
