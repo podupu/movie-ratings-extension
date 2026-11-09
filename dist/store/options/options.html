@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Movie Ratings – Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <h1>Movie Ratings for Cinemas &amp; Streaming</h1>
+
+    <section>
+      <h2>OMDb API key</h2>
+      <p>Ratings come from the OMDb API. Get a free key (1,000 lookups/day) at
+        <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener">omdbapi.com/apikey.aspx</a>,
+        then paste it here.</p>
+      <div class="row">
+        <input id="omdbKey" type="text" placeholder="e.g. a1b2c3d4" autocomplete="off" spellcheck="false">
+        <button id="test" type="button">Test key</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>"Worth watching" thresholds</h2>
+      <p>Badges get a green outline when a film meets both.</p>
+      <label>Minimum IMDb rating
+        <input id="minRating" type="number" min="0" max="10" step="0.1">
+      </label>
+      <label>Minimum number of votes
+        <input id="minVotes" type="number" min="0" step="500">
+      </label>
+    </section>
+
+    <section>
+      <h2>Streaming sites</h2>
+      <p>Netflix, Prime Video, Disney+, HBO Max, Apple TV+, Stan, Binge, JioHotstar and others.
+        Only titles you scroll to are looked up, but a long browsing session can still use
+        a few hundred of your 1,000 free lookups a day.</p>
+      <label class="check"><input id="ottEnabled" type="checkbox"> Show badges on streaming sites</label>
+    </section>
+
+    <div class="row">
+      <button id="save" type="button" class="primary">Save</button>
+      <button id="clear" type="button">Clear cached ratings</button>
+      <span id="status" role="status"></span>
+    </div>
+
+    <section class="legend">
+      <h2>Badge legend</h2>
+      <p><span class="b good">IMDb ★ 8.1 <small>24k</small></span> meets both thresholds</p>
+      <p><span class="b few">IMDb ★ 8.2 <small>2.6k</small></span> too few votes, rating may still move</p>
+      <p><span class="b">IMDb ★ 6.9 <small>37k</small></span> below your minimum rating</p>
+      <p><span class="b poor">IMDb ★ 5.4 <small>12k</small></span> well below your minimum</p>
+    </section>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

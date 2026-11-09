@@ -1,0 +1,44 @@
+.mr-badge {
+  all: initial;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 4px 0 4px 8px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #f5c518;
+  color: #000;
+  font: 700 13px/1.4 Arial, Helvetica, sans-serif;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.mr-badge:hover { filter: brightness(0.92); }
+.mr-votes { all: initial; font: 400 11px/1 Arial, Helvetica, sans-serif; color: #333; }
+
+/* Rating >= min rating AND votes >= min votes */
+.mr-good { box-shadow: 0 0 0 2px #1a7f37; }
+/* Fewer votes than the minimum: rating may still move */
+.mr-few { background: #fbe6a2; }
+/* Well below the min rating */
+.mr-poor { background: #d9d9d9; color: #444; }
+.mr-poor .mr-votes { color: #555; }
+.mr-loading, .mr-muted { background: #eee; color: #666; font-weight: 400; cursor: default; }
+.mr-warn { background: #ffe1e1; color: #8a1c1c; }
+
+/* Streaming sites: badge pinned to the top-left of the poster. */
+.mr-host { position: relative; }
+.mr-badge.mr-overlay {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 5;
+  margin: 0;
+  padding: 1px 6px;
+  font-size: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+.mr-badge.mr-overlay.mr-good { box-shadow: 0 0 0 2px #1a7f37, 0 1px 3px rgba(0, 0, 0, 0.45); }
+.mr-badge.mr-overlay.mr-loading { opacity: 0.85; }

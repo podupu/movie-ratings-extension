@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="frame.css"><link rel="stylesheet" href="../../src/badge.css">
+<style>
+.page { background: #141414; color: #e5e5e5; padding: 26px 34px; }
+.page h2 { font-size: 19px; margin: 6px 0 12px; font-weight: 600; }
+.row { display: flex; gap: 10px; margin-bottom: 26px; }
+.card { position: relative; width: 186px; height: 105px; border-radius: 5px; overflow: hidden; flex: none; display: flex; align-items: flex-end; padding: 10px; font: 700 15px/1.15 Georgia, serif; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+</style></head><body>
+<div class="cap"><img src="../../icons/icon128.png"><div><h1>IMDb ratings on every poster</h1><p>Netflix, Prime Video, Disney+, HBO Max, Stan, Binge, JioHotstar and more</p></div></div>
+<div class="win"><div class="bar"><i></i><i></i><i></i><div class="url">streaming-site.example/browse</div></div>
+<div class="page" id="p"></div></div>
+<script>
+const rows = [
+  ['Trending now', [['The Long Harbour','8.4','212k','good','#1f4e5f,#0b1d26'],['Paper Lanterns','7.6','48k','good','#7a3b1d,#2a1209'],['Night Shift Nine','6.1','19k','','#3a3a5c,#121226'],['Saltwater Kings','7.9','6.2k','few','#14532d,#05200f'],['Echo Valley','5.2','33k','poor','#57534e,#1c1917'],['The Quiet Year','8.1','95k','good','#5b2149,#22081b']]],
+  ['TV series', [['Glasshouse','8.7','310k','good','#334155,#0f172a'],['Monsoon Diaries','7.2','11k','good','#155e75,#082f3a'],['Static','6.6','27k','','#4c1d95,#1e0b3b'],['Harbour Lights','7.8','3.1k','few','#713f12,#2b1705'],['Red Dust Road','8.3','54k','good','#7f1d1d,#2c0a0a'],['Second Act','4.9','12k','poor','#3f3f46,#18181b']]],
+  ['Award winners', [['Northern Line','7.4','88k','good','#0f766e,#042f2c'],['Small Hours','8.0','140k','good','#1e3a8a,#0a1538'],['The Cartographer','6.8','22k','','#78350f,#2a1404'],['Wildflower','7.7','64k','good','#9d174d,#3a0820'],['Lowlands','7.1','4.4k','few','#365314,#131f06'],['Blue Hour','8.6','205k','good','#0c4a6e,#041c2b']]]
+];
+const p = document.getElementById('p');
+for (const [h, cards] of rows) {
+  p.insertAdjacentHTML('beforeend', `<h2>${h}</h2>`);
+  const row = document.createElement('div'); row.className = 'row';
+  for (const [t, r, v, cls, g] of cards) {
+    row.insertAdjacentHTML('beforeend', `<div class="card" style="background:linear-gradient(160deg,${g})">${t}<span class="mr-badge mr-overlay ${cls === 'poor' ? 'mr-poor' : ''} ${cls === 'good' ? 'mr-good' : ''} ${cls === 'few' ? 'mr-few' : ''}">IMDb ★ ${r}<span class="mr-votes">${v}</span></span></div>`);
+  }
+  p.appendChild(row);
+}
+p.insertAdjacentHTML('beforeend', `<div class="tip" style="left:300px;top:100px">Paper Lanterns (2025) – 48,312 votes\nRotten Tomatoes 91% · Metacritic 78</div>`);
+</script></body></html>

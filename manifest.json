@@ -1,0 +1,83 @@
+{
+  "manifest_version": 3,
+  "name": "Movie Ratings for Cinemas & Streaming",
+  "version": "1.0.0",
+  "description": "Shows IMDb ratings on cinema and streaming sites: Netflix, Prime Video, Disney+, HBO Max, Stan, Binge, JioHotstar and more.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Movie Ratings – settings",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "options_page": "options/options.html",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://www.omdbapi.com/*",
+    "https://v3.sg.media-imdb.com/*",
+    "https://caching.graphql.imdb.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.eventcinemas.com.au/*",
+        "https://*.hoyts.com.au/*",
+        "https://villagecinemas.com.au/*",
+        "https://*.villagecinemas.com.au/*",
+        "https://*.netflix.com/*",
+        "https://*.primevideo.com/*",
+        "https://www.amazon.com/gp/video/*",
+        "https://www.amazon.com.au/gp/video/*",
+        "https://www.amazon.co.uk/gp/video/*",
+        "https://www.amazon.ca/gp/video/*",
+        "https://www.amazon.de/gp/video/*",
+        "https://www.amazon.in/gp/video/*",
+        "https://www.amazon.co.jp/gp/video/*",
+        "https://www.amazon.fr/gp/video/*",
+        "https://www.amazon.it/gp/video/*",
+        "https://www.amazon.es/gp/video/*",
+        "https://*.disneyplus.com/*",
+        "https://*.max.com/*",
+        "https://*.hbomax.com/*",
+        "https://tv.apple.com/*",
+        "https://*.hulu.com/*",
+        "https://*.paramountplus.com/*",
+        "https://*.peacocktv.com/*",
+        "https://*.tubitv.com/*",
+        "https://mubi.com/*",
+        "https://*.mubi.com/*",
+        "https://*.crunchyroll.com/*",
+        "https://*.stan.com.au/*",
+        "https://*.binge.com.au/*",
+        "https://*.foxtel.com.au/*",
+        "https://www.sbs.com.au/ondemand*",
+        "https://iview.abc.net.au/*",
+        "https://*.hotstar.com/*",
+        "https://*.jiohotstar.com/*",
+        "https://*.zee5.com/*",
+        "https://*.sonyliv.com/*",
+        "https://*.aha.video/*",
+        "https://*.sunnxt.com/*"
+      ],
+      "js": [
+        "src/sites.js",
+        "src/content.js"
+      ],
+      "css": [
+        "src/badge.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="frame.css"><link rel="stylesheet" href="../../src/badge.css">
+<style>
+.page { background: #fff; color: #222; padding: 22px 40px; font-family: Arial, sans-serif; }
+.nav { display: flex; gap: 22px; font-size: 14px; color: #666; border-bottom: 1px solid #eee; padding-bottom: 14px; margin-bottom: 14px; }
+.nav b { color: #c8102e; }
+.film { display: flex; gap: 18px; padding: 13px 0; border-bottom: 1px solid #f0f0f0; align-items: center; }
+.poster { width: 58px; height: 84px; border-radius: 4px; flex: none; }
+.t { font-size: 18px; font-weight: 700; display: flex; align-items: center; }
+.meta { font-size: 13px; color: #777; margin-top: 4px; }
+.times { margin-left: auto; display: flex; gap: 8px; }
+.times span { border: 1px solid #ccc; border-radius: 4px; padding: 6px 10px; font-size: 13px; }
+</style></head><body>
+<div class="cap"><img src="../../icons/icon128.png"><div><h1>Pick the session worth watching</h1><p>Ratings appear next to every film on Event Cinemas, HOYTS and Village Cinemas</p></div></div>
+<div class="win"><div class="bar"><i></i><i></i><i></i><div class="url">cinema-site.example/sessions</div></div>
+<div class="page" id="p"><div class="nav"><b>Today</b><span>Tomorrow</span><span>Sat 14</span><span>Sun 15</span><span>All cinemas ▾</span></div></div></div>
+<script>
+const films = [
+  ['The Long Harbour','M · 2h 18m · Drama','8.4','212k','good','#1f4e5f',['10:30am','1:15pm','6:40pm']],
+  ['Saltwater Kings','MA15+ · 1h 52m · Action','7.9','6.2k','few','#14532d',['11:00am','4:20pm','9:10pm']],
+  ['Night Shift Nine','M · 1h 41m · Thriller','6.1','19k','','#3a3a5c',['12:45pm','7:30pm']],
+  ['Echo Valley','PG · 1h 35m · Family','5.2','33k','poor','#57534e',['10:00am','2:30pm']],
+  ['Small Hours','M · 2h 04m · Romance','8.0','140k','good','#1e3a8a',['3:10pm','8:45pm']]
+];
+const p = document.getElementById('p');
+for (const [t, m, r, v, cls, c, times] of films) {
+  p.insertAdjacentHTML('beforeend', `<div class="film"><div class="poster" style="background:linear-gradient(160deg,${c},#111)"></div><div><div class="t">${t}<span class="mr-badge ${cls ? 'mr-' + cls : ''}">IMDb ★ ${r}<span class="mr-votes">${v}</span></span></div><div class="meta">${m}</div></div><div class="times">${times.map((x) => `<span>${x}</span>`).join('')}</div></div>`);
+}
+p.insertAdjacentHTML('beforeend', `<div class="tip" style="left:330px;top:248px">Saltwater Kings (2026) – 6,214 votes\nFew votes so far: the rating may still move</div>`);
+</script></body></html>
