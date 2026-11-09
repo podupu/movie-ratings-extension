@@ -50,7 +50,9 @@
     b.addEventListener('click', (e) => {
       swallow(e);
       if (b.dataset.href) window.open(b.dataset.href, '_blank', 'noopener');
-      else if (b.dataset.action === 'options') chrome.runtime.sendMessage({ type: 'OPEN_OPTIONS' });
+      else if (b.dataset.action === 'options' && !send({ type: 'OPEN_OPTIONS' })) {
+        b.title = STALE;
+      }
     }, true);
     return b;
   }
@@ -124,15 +126,46 @@
     });
   }, { rootMargin: '200px' });
 
+  // When the extension is reloaded or updated, scripts already running in open
+  // tabs lose their connection and chrome.runtime.sendMessage throws
+  // "Extension context invalidated". Stop quietly instead; refreshing the page
+  // loads the new version.
+  let observer = null;
+  const STALE = 'The extension was updated or reloaded. Refresh the page to see ratings.';
+  function alive() {
+    try {
+      return !!(chrome.runtime && chrome.runtime.id);
+    } catch {
+      return false;
+    }
+  }
+  function shutdown() {
+    io.disconnect();
+    if (observer) observer.disconnect();
+  }
+  function send(msg, cb) {
+    if (alive()) {
+      try {
+        chrome.runtime.sendMessage(msg, cb);
+        return true;
+      } catch {
+        // context invalidated between the check and the call
+      }
+    }
+    shutdown();
+    return false;
+  }
+
   function request(el) {
     const t = tracked.get(el);
     if (!t || t.requested) return;
     t.requested = true;
     const { title, badge } = t;
-    chrome.runtime.sendMessage({ type: 'GET_RATING', title, kind: kindOf(t.site) }, (res) => {
+    const sent = send({ type: 'GET_RATING', title, kind: kindOf(t.site) }, (res) => {
       if (chrome.runtime.lastError) res = { error: chrome.runtime.lastError.message };
       if (tracked.get(el) === t) render(badge, res);
     });
+    if (!sent) render(badge, { error: STALE });
   }
 
   function scan() {
@@ -190,13 +223,14 @@
       return m.type === 'childList' && m.removedNodes.length === 0 &&
         m.addedNodes.length > 0 && [...m.addedNodes].every(isBadge);
     };
-    new MutationObserver((mutations) => {
+    observer = new MutationObserver((mutations) => {
       if (mutations.every(ours)) return;
       const now = Date.now();
       if (!firstAt) firstAt = now;
       clearTimeout(timer);
       timer = now - firstAt >= 1000 ? (run(), null) : setTimeout(run, 300);
-    }).observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['aria-label', 'alt', 'href'] });
+    });
+    observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['aria-label', 'alt', 'href'] });
   }
 
   // Load settings last, so everything above is initialised before start() runs.
