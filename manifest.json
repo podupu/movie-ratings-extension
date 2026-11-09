@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Movie Ratings for Cinemas & Streaming",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Shows IMDb ratings next to movie and TV titles on cinema and streaming websites, so you can pick what's worth watching.",
   "icons": {
     "16": "icons/icon16.png",

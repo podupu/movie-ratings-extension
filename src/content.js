@@ -1,19 +1,15 @@
 /* global MR_SITES, MR_readTitle */
 (() => {
-  const site = MR_SITES.find(
+  // A site can have several adapters, one per page layout
+  // (e.g. Event Cinemas' session list and its poster grid).
+  const matching = MR_SITES.filter(
     (s) => s.host.test(location.hostname) && (!s.path || s.path.test(location.pathname))
   );
-  if (!site) return;
+  if (!matching.length) return;
 
-  const kind = site.kind || 'cinema';
+  const kindOf = (site) => site.kind || 'cinema';
+  let sites = matching;
   let settings = { minRating: 7, minVotes: 10000 };
-
-  chrome.storage.sync.get(['minRating', 'minVotes', 'ottEnabled'], (s) => {
-    if (kind === 'ott' && s.ottEnabled === false) return;
-    if (s.minRating != null) settings.minRating = Number(s.minRating);
-    if (s.minVotes != null) settings.minVotes = Number(s.minVotes);
-    start();
-  });
 
   // "Godzilla Minus Zero  (Japanese, Eng Sub)" -> "Godzilla Minus Zero"
   // "Wicker MA15+" -> "Wicker"
@@ -25,10 +21,9 @@
       .trim();
   }
 
-  function readTitle(el) {
-    if (site.getTitle) return site.getTitle(el) || '';
-    if (kind === 'ott') return MR_readTitle(el);
-    return cleanTitle(el.textContent || '');
+  function readTitle(site, el) {
+    if (kindOf(site) === 'ott') return site.getTitle ? site.getTitle(el) || '' : MR_readTitle(el);
+    return cleanTitle(site.getTitle ? site.getTitle(el) || '' : el.textContent || '');
   }
 
   function formatVotes(n) {
@@ -116,7 +111,7 @@
     return host;
   }
 
-  // el -> { title, badge, requested }. Streaming rows are virtualised: the same
+  // el -> { site, title, badge, requested }. Streaming rows are virtualised: the same
   // node is reused for a different title, and frameworks may drop our badge.
   const tracked = new WeakMap();
 
@@ -134,16 +129,21 @@
     if (!t || t.requested) return;
     t.requested = true;
     const { title, badge } = t;
-    chrome.runtime.sendMessage({ type: 'GET_RATING', title, kind }, (res) => {
+    chrome.runtime.sendMessage({ type: 'GET_RATING', title, kind: kindOf(t.site) }, (res) => {
       if (chrome.runtime.lastError) res = { error: chrome.runtime.lastError.message };
       if (tracked.get(el) === t) render(badge, res);
     });
   }
 
   function scan() {
+    sites.forEach(scanSite);
+  }
+
+  function scanSite(site) {
     document.querySelectorAll(site.title).forEach((el) => {
-      const title = readTitle(el);
       const prev = tracked.get(el);
+      if (prev && prev.site !== site) return; // already handled by another adapter
+      const title = readTitle(site, el);
       if (prev && prev.title === title && prev.badge.isConnected) return;
       if (prev) prev.badge.remove();
       if (!title) {
@@ -159,7 +159,7 @@
         const anchor = (site.anchor && site.anchor(el)) || el;
         anchor.insertAdjacentElement('afterend', badge);
       }
-      tracked.set(el, { title, badge, requested: false });
+      tracked.set(el, { site, title, badge, requested: false });
       io.unobserve(el);
       io.observe(el);
     });
@@ -198,4 +198,13 @@
       timer = now - firstAt >= 1000 ? (run(), null) : setTimeout(run, 300);
     }).observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['aria-label', 'alt', 'href'] });
   }
+
+  // Load settings last, so everything above is initialised before start() runs.
+  chrome.storage.sync.get(['minRating', 'minVotes', 'ottEnabled'], (s) => {
+    sites = matching.filter((site) => !(kindOf(site) === 'ott' && s.ottEnabled === false));
+    if (!sites.length) return;
+    if (s.minRating != null) settings.minRating = Number(s.minRating);
+    if (s.minVotes != null) settings.minVotes = Number(s.minVotes);
+    start();
+  });
 })();

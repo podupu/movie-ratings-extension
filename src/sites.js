@@ -103,6 +103,20 @@ const MR_SITES = [
     anchor: (el) => el.closest('a.movie-title-link')
   },
   {
+    // Poster grid: /movies/nowshowing, /movies/comingsoon, cinema pages.
+    // The title strip is a clipped fixed-height box, so pin the badge to the poster.
+    name: 'Event Cinemas',
+    host: /(^|\.)eventcinemas\.com\.au$/,
+    title: '.movie-thumb-wrapper > a',
+    overlay: true,
+    getTitle: (el) => {
+      const info = el.querySelector('[data-name]');
+      if (info && info.dataset.name) return info.dataset.name;
+      const name = el.querySelector('.title .name');
+      return name && name.firstChild ? name.firstChild.textContent : '';
+    }
+  },
+  {
     name: 'HOYTS',
     host: /(^|\.)hoyts\.com\.au$/,
     title: 'a.movies-list__link'

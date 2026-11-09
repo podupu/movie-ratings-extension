@@ -6,7 +6,7 @@ Cinemas (the badge appears next to the title):
 
 | Site | Pages |
 |---|---|
-| Event Cinemas (eventcinemas.com.au) | Sessions |
+| Event Cinemas (eventcinemas.com.au) | Cinema session lists, Now Showing / Coming Soon poster grids |
 | HOYTS (hoyts.com.au) | Movies list |
 | Village Cinemas (villagecinemas.com.au) | Movies list |
 
@@ -67,6 +67,8 @@ store/               Store listing text, privacy policy, screenshots
    ```
 3. Add the URL pattern to `content_scripts.matches` in `manifest.json`, e.g. `"https://*.readingcinemas.com.au/*"`.
 4. Click the reload icon on the extension in `chrome://extensions` and refresh the site.
+
+A site can have several entries, one per page layout (Event Cinemas has one for its session list and one for its poster grid). An element is only badged by the first entry that matches it.
 
 If the selector matches a hidden duplicate (some sites have separate mobile/desktop markup), make it more specific. Use `anchor` to put the badge after a different element than the title.
 
